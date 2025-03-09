@@ -1,22 +1,17 @@
 import { zValidator } from "@hono/zod-validator";
-import type { AnyDrizzleDB } from "drizzle-graphql";
-import { asc, count, desc, eq, ilike, or, sql } from "drizzle-orm";
 import type { Table } from "drizzle-orm";
-import type { NeonHttpDatabase } from "drizzle-orm/neon-http";
-import { createInsertSchema } from "drizzle-zod";
 import { type Env, Hono, type Schema } from "hono";
 import { HTTPException } from "hono/http-exception";
 import type { BlankSchema } from "hono/types";
 import { z } from "zod";
-import type { SanitizedCollection, SanitizedHub } from "../types";
+import type { Driver, SanitizedCollection } from "../types";
 
 export function createRoutes<
-  Database extends AnyDrizzleDB<any>,
   U extends Table,
   E extends Env = Env,
   P extends Schema = BlankSchema,
   I extends string = string,
->(config: SanitizedHub<Database>, collection: SanitizedCollection<U>) {
+>(collection: SanitizedCollection<U>, driver: Driver) {
   // Creating a new app
   let app = new Hono<E, P, I>().use(async (c, next) => {
     // Checking if we have access
@@ -27,54 +22,6 @@ export function createRoutes<
 
     await next();
   });
-
-  // Database instance
-  const db = config.db as NeonHttpDatabase;
-
-  // Generating the zod validation
-  let collectionInsertSchema = createInsertSchema(collection.schema);
-
-  if (collection.admin.fields)
-    // @ts-expect-error
-    collectionInsertSchema = collectionInsertSchema.pick(
-      collection.admin.fields.reduce((acc, field) => {
-        let key = field;
-        if (typeof field === "object" && "name" in field) key = field.name;
-
-        // @ts-expect-error
-        acc[key] = true;
-        return acc;
-      }, {}),
-    );
-
-  // Prepared queries
-  // Collection Document Count
-  const collectionDocumentCount = db
-    .select({ count: count() })
-    .from(collection.schema)
-    .prepare(`${collection.slug}_count_query`);
-
-  // Collection Retrieve Query
-  const collectionRetrieveQuery = db
-    .select()
-    .from(collection.schema)
-    .where(eq(collection.queryKey, sql.placeholder("id")))
-    .prepare(`${collection.slug}_retrieve_query`);
-
-  // Collection Delete Query
-  const collectionDeleteQuery = db
-    .delete(collection.schema)
-    .where(eq(collection.queryKey, sql.placeholder("id")))
-    .$dynamic();
-
-  if ("$returningId" in collectionDeleteQuery) {
-    // @ts-expect-error
-    collectionDeleteQuery.$returningId?.();
-  } else {
-    collectionDeleteQuery.returning();
-  }
-
-  collectionDeleteQuery.prepare(`${collection.slug}_delete_query`);
 
   const defaultLimit =
     (typeof collection.pagination !== "boolean"
@@ -98,59 +45,7 @@ export function createRoutes<
 
     const query = c.req.valid("query");
 
-    const records = db.select().from(collection.schema).$dynamic();
-    const recordsCount = db.select({ count: count() }).from(collection.schema);
-
-    if (query.search && collection.listSearchableFields.length > 0) {
-      records.where(
-        or(
-          ...collection.listSearchableFields.map((field) =>
-            // @ts-expect-error
-            ilike(collection.schema[field], `%${query.search}%`),
-          ),
-        ),
-      );
-    }
-
-    // Sorting the data
-    const sortBy = query.sortBy ?? collection.defaultSort;
-    let sortByInString = String(sortBy);
-
-    let order: typeof desc;
-    if (sortByInString.startsWith("-")) {
-      sortByInString = sortByInString.slice(1);
-      order = desc;
-    } else {
-      order = asc;
-    }
-
-    if (sortBy && sortByInString in collection.schema) {
-      // @ts-expect-error
-      records.orderBy(order(collection.schema[sortByInString]));
-    }
-
-    let results: any[];
-    let totalDocuments: number;
-    let payload: any[] | { results: any[]; count: number };
-
-    if (collection.pagination) {
-      if (
-        collection.pagination.maxLimit &&
-        query.limit > collection.pagination.maxLimit
-      )
-        throw new HTTPException(400, {
-          message: "The limit value exceeds the maximum allowed limit.",
-        });
-
-      records.limit(query.limit).offset(query.offset);
-
-      [results, totalDocuments] = await Promise.all([
-        records.execute(),
-        recordsCount.then((res) => res[0].count),
-      ]);
-
-      payload = { results, count: totalDocuments };
-    } else payload = await records.execute();
+    let payload = await driver.list(query);
 
     for (const hook of collection.hooks.afterRead ?? []) {
       const res = await hook({
@@ -168,9 +63,7 @@ export function createRoutes<
   // List records endpoint
   app.get("/count", async (c) =>
     c.json({
-      count: await collectionDocumentCount
-        .execute()
-        .then((records) => records[0].count),
+      count: await driver.count(),
     }),
   );
 
@@ -195,13 +88,7 @@ export function createRoutes<
     }
 
     // Parsing the value
-    const parsedData = await collectionInsertSchema.safeParseAsync(raw);
-
-    if (!parsedData.success) {
-      return c.json(parsedData, 400);
-    }
-
-    let data = parsedData.data;
+    let data = await driver.validate(raw);
 
     for (const hook of collection.hooks.beforeChange ?? []) {
       const res = await hook({
@@ -209,26 +96,11 @@ export function createRoutes<
         data,
       });
 
-      // @ts-expect-error
       if (res !== undefined) data = res;
     }
 
     // Saving the record
-    const createdDocQuery = db
-      .insert(collection.schema)
-      .values(data)
-      .$dynamic();
-
-    if (
-      "$returningId" in createdDocQuery &&
-      typeof createdDocQuery.$returningId === "function"
-    ) {
-      createdDocQuery.$returningId?.();
-    } else {
-      createdDocQuery.returning();
-    }
-
-    let createdDoc: any = await createdDocQuery.execute();
+    let createdDoc: any = await driver.create(data);
 
     for (const hook of collection.hooks.afterChange ?? []) {
       const res = await hook({
@@ -247,6 +119,11 @@ export function createRoutes<
 
   // Retrieve record endpoint
   app.get("/:id", async (c) => {
+    const id = c.req.param("id");
+
+    if (!id)
+      throw new HTTPException(404, { message: "id in params is missing" });
+
     for (const hook of collection.hooks.beforeRead ?? []) {
       await hook({
         context: c,
@@ -254,11 +131,7 @@ export function createRoutes<
     }
 
     // Getting the record
-    let record = await collectionRetrieveQuery
-      .execute({
-        id: c.req.param("id"),
-      })
-      .then((records) => records[0]);
+    let record = await driver.retrieve(id);
 
     if (!record)
       throw new HTTPException(404, { message: "Document not found" });
@@ -279,6 +152,11 @@ export function createRoutes<
 
   // Update record endpoint
   app.put("/:id", async (c) => {
+    const id = c.req.param("id");
+
+    if (!id)
+      throw new HTTPException(404, { message: "id in params is missing" });
+
     // Getting the raw data
     let raw = await (c.req.header("Content-Type") === "application/json"
       ? c.req.json()
@@ -290,11 +168,7 @@ export function createRoutes<
       });
 
     // Getting the original document
-    const record = await collectionRetrieveQuery
-      .execute({
-        id: c.req.param("id"),
-      })
-      .then((records) => records[0]);
+    const record = await driver.retrieve(id);
 
     if (!record)
       throw new HTTPException(404, { message: "Document not found" });
@@ -309,13 +183,7 @@ export function createRoutes<
     }
 
     // Parsing the value
-    const parsedData = await collectionInsertSchema.safeParseAsync(raw);
-
-    if (!parsedData.success) {
-      return c.json(parsedData, 400);
-    }
-
-    let data = parsedData.data;
+    let data = await driver.validate(raw);
 
     for (const hook of collection.hooks.beforeChange ?? []) {
       const res = await hook({
@@ -324,28 +192,11 @@ export function createRoutes<
         originalDoc: record,
       });
 
-      // @ts-expect-error
       if (res !== undefined) data = res;
     }
 
     // Updating the record
-    const updatedDocQuery = db
-      .update(collection.schema)
-      // @ts-expect-error
-      .set(data)
-      .where(eq(collection.queryKey, c.req.param("id")))
-      .$dynamic();
-
-    if (
-      "$returningId" in updatedDocQuery &&
-      typeof updatedDocQuery.$returningId === "function"
-    ) {
-      updatedDocQuery.$returningId?.();
-    } else {
-      updatedDocQuery.returning();
-    }
-
-    let updatedDoc: any = await updatedDocQuery.execute();
+    let updatedDoc: any = await driver.update(id, data);
 
     for (const hook of collection.hooks.afterChange ?? []) {
       const res = await hook({
@@ -363,14 +214,17 @@ export function createRoutes<
 
   // Delete record endpoint
   app.delete("/:id", async (c) => {
+    const id = c.req.param("id");
+
+    if (!id)
+      throw new HTTPException(404, { message: "id in params is missing" });
+
     for (const hook of collection.hooks.beforeDelete ?? []) {
       await hook({ context: c });
     }
 
     // Deleting the record
-    let deletedDoc: any = await collectionDeleteQuery.execute({
-      id: c.req.param("id"),
-    });
+    let deletedDoc: any = await driver.delete(id);
 
     for (const hook of collection.hooks.afterDelete ?? []) {
       const res = await hook({ context: c, doc: deletedDoc });
@@ -400,7 +254,13 @@ export function createRoutes<
           const { items } = c.req.valid("json");
 
           try {
-            await action({ items, context: c, db, config: collection });
+            await action({
+              items,
+              context: c,
+              // @ts-expect-error
+              db: driver.db,
+              config: collection,
+            });
           } catch (err) {
             console.error(err);
             throw new HTTPException(400, {

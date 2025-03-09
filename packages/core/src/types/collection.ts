@@ -1,5 +1,5 @@
 import type { AnyDrizzleDB } from "drizzle-graphql";
-import type { Column, Table } from "drizzle-orm";
+import type { Table } from "drizzle-orm";
 import type { Context, Env, Hono, Schema } from "hono";
 import type { BlankSchema, Input } from "hono/types";
 import type { JSONValue } from "hono/utils/types";
@@ -8,7 +8,10 @@ import type { Prettify, Promisify } from "./utils";
 export type TableColumns<T extends Table> = keyof T["_"]["columns"];
 
 /** Manage all aspects of a data collection */
-export type CollectionConfig<T extends Table = Table> = {
+export type CollectionConfig<
+  T extends Table = Table,
+  U extends string | number | symbol = TableColumns<T>,
+> = {
   /**
    * The collection slug
    * @default tableName
@@ -18,7 +21,7 @@ export type CollectionConfig<T extends Table = Table> = {
    * The key to use for querying
    * @default pk Tables primary key
    */
-  queryKey?: Column<any, object, object>;
+  queryKey?: U;
   schema: T;
   /**
    * Access control
@@ -33,15 +36,15 @@ export type CollectionConfig<T extends Table = Table> = {
   /**
    * Default sort order
    */
-  defaultSort?: TableColumns<T> | `-${TableColumns<T> & string}`;
+  defaultSort?: U | `-${U & string}`;
   /**
    * Fields to be searched via the full text search
    */
-  listSearchableFields?: TableColumns<T>[];
+  listSearchableFields?: U[];
   /**
    * Collection admin options
    */
-  admin?: Partial<CollectionAdminProps<T>>;
+  admin?: Partial<CollectionAdminProps<T, U>>;
   /**
    * Pagination options
    * @default false
@@ -50,17 +53,43 @@ export type CollectionConfig<T extends Table = Table> = {
   /**
    * Hooks to modify HonoHub functionality
    */
-  hooks?: Partial<CollectionHooks<T>>;
+  hooks?: Partial<CollectionHooks<T["$inferInsert"]>>;
   plugins?: CollectionPlugin<T>[];
+  driver?: (db: unknown, collection: SanitizedCollection<T, U>) => Driver;
 };
 
 /** Sanitized collection configuration */
-export type SanitizedCollection<T extends Table = Table> = Prettify<
-  Required<Omit<CollectionConfig<T>, "defaultSort" | "admin">> & {
-    defaultSort?: TableColumns<T> | `-${TableColumns<T> & string}`;
-    admin: CollectionAdminProps<T> & { actions: CollectionAction<T>[] };
+export type SanitizedCollection<
+  T extends Table = Table,
+  U extends string | number | symbol = TableColumns<T>,
+> = Prettify<
+  Required<Omit<CollectionConfig<T, U>, "defaultSort" | "admin" | "driver">> & {
+    defaultSort?: U | `-${U & string}`;
+    admin: CollectionAdminProps<T, U> & { actions: CollectionAction<T, U>[] };
+    driver: (db: unknown, collection: SanitizedCollection<T, U>) => Driver;
   }
 >;
+
+export interface Driver<
+  T extends Record<string, unknown> = Record<string, unknown>,
+> {
+  db: unknown;
+  collection: SanitizedCollection;
+  list: (query: Query) => Promise<T[] | { results: T[]; count: number }>;
+  count: () => Promise<number>;
+  validate: (data: unknown) => Promise<T>;
+  create: (data: T) => Promise<T>;
+  retrieve: (id: string | number) => Promise<T>;
+  update: (id: string | number, data: Partial<T>) => Promise<T>;
+  delete: (id: string | number) => Promise<T>;
+}
+
+export type Query = {
+  limit: number;
+  offset: number;
+  search?: string;
+  sortBy?: string;
+};
 
 /** Collection pagination options */
 export type CollectionPagination = {
@@ -78,7 +107,10 @@ export type CollectionPagination = {
   maxLimit?: number;
 };
 
-export type CollectionAdminProps<T extends Table = Table> = {
+export type CollectionAdminProps<
+  T extends Table = Table,
+  U extends string | number | symbol = TableColumns<T>,
+> = {
   /**
    * Label configuration
    */
@@ -86,14 +118,11 @@ export type CollectionAdminProps<T extends Table = Table> = {
   /**
    * Default columns to show in list view
    */
-  columns?: (
-    | TableColumns<T>
-    | { name: TableColumns<T>; label: string; type?: string }
-  )[];
+  columns?: (U | { name: U; label: string; type?: string })[];
   fields?: (
-    | TableColumns<T>
+    | U
     | {
-        name: TableColumns<T>;
+        name: U;
         label: string;
         type?: string;
         required?: boolean;
@@ -104,10 +133,13 @@ export type CollectionAdminProps<T extends Table = Table> = {
    * Quick actions to perform on the collection from the UI
    * @default false
    */
-  actions?: boolean | CollectionAction<T>[];
+  actions?: boolean | CollectionAction<T, U>[];
 };
 
-export type CollectionAction<T extends Table = Table> = {
+export type CollectionAction<
+  T extends Table = Table,
+  U extends string | number | symbol = TableColumns<T>,
+> = {
   name: string;
   label?: string;
   icon?: string;
@@ -120,27 +152,32 @@ export type CollectionAction<T extends Table = Table> = {
     db: Database;
     items: unknown[];
     context: Context<E, P, I>;
-    config: SanitizedCollection<T>;
+    config: SanitizedCollection<T, U>;
   }) => Promisify<void>;
   level?: boolean | { title: string; message: string };
 };
 
-export type CollectionPlugin<T extends Table = Table> = {
+export type CollectionPlugin<
+  T extends Table = Table,
+  U extends string | number | symbol = TableColumns<T>,
+> = {
   name: string;
   register?: (
-    config: SanitizedCollection<T>,
-  ) => SanitizedCollection<T> | undefined;
+    config: SanitizedCollection<T, U>,
+  ) => SanitizedCollection<T, U> | undefined;
   bootstrap?: <
     E extends Env = Env,
     P extends Schema = BlankSchema,
     I extends string = string,
   >(props: {
     app: Hono<E, P, I>;
-    config: SanitizedCollection<T>;
+    config: SanitizedCollection<T, U>;
   }) => Hono<E, P, I> | undefined;
 };
 
-export type CollectionHooks<T extends Table = Table> = {
+export type CollectionHooks<
+  T extends Record<string, unknown> = Record<string, unknown>,
+> = {
   beforeOperation: CollectionBeforeOperationHook[];
   beforeValidate: CollectionBeforeValidateHook<T>[];
   beforeChange: CollectionBeforeChangeHook<T>[];
@@ -160,34 +197,40 @@ export type CollectionBeforeOperationHook = <
   context: Context<E, P, I>;
 }) => Promisify<void>;
 
-export type CollectionBeforeValidateHook<T extends Table = Table> = <
+export type CollectionBeforeValidateHook<
+  T extends Record<string, unknown> = Record<string, unknown>,
+> = <
   E extends Env = Env,
   P extends string = string,
   I extends Input = Input,
 >(props: {
   context: Context<E, P, I>;
   data: JSONValue;
-  originalDoc?: T["$inferInsert"];
+  originalDoc?: T;
 }) => Promisify<JSONValue>;
 
-export type CollectionBeforeChangeHook<T extends Table = Table> = <
+export type CollectionBeforeChangeHook<
+  T extends Record<string, unknown> = Record<string, unknown>,
+> = <
   E extends Env = Env,
   P extends string = string,
   I extends Input = Input,
 >(props: {
   context: Context<E, P, I>;
-  data: T["$inferInsert"];
-  originalDoc?: T["$inferInsert"];
-}) => Promisify<T["$inferInsert"]>;
+  data: T;
+  originalDoc?: T;
+}) => Promisify<T>;
 
-export type CollectionAfterChangeHook<T extends Table = Table> = <
+export type CollectionAfterChangeHook<
+  T extends Record<string, unknown> = Record<string, unknown>,
+> = <
   E extends Env = Env,
   P extends string = string,
   I extends Input = Input,
 >(props: {
   context: Context<E, P, I>;
-  doc: T["$inferInsert"];
-  previousDoc: T["$inferInsert"];
+  doc: T;
+  previousDoc: T;
 }) => Promisify<JSONValue | undefined>;
 
 export type CollectionBeforeReadHook = <
@@ -198,13 +241,15 @@ export type CollectionBeforeReadHook = <
   context: Context<E, P, I>;
 }) => Promisify<void>;
 
-export type CollectionAfterReadHook<T extends Table = Table> = <
+export type CollectionAfterReadHook<
+  T extends Record<string, unknown> = Record<string, unknown>,
+> = <
   E extends Env = Env,
   P extends string = string,
   I extends Input = Input,
 >(props: {
   context: Context<E, P, I>;
-  doc: T["$inferInsert"] | { results: T["$inferInsert"][]; count: number };
+  doc: T | { results: T[]; count: number };
 }) => Promisify<JSONValue | undefined>;
 
 export type CollectionBeforeDeleteHook = <
@@ -219,13 +264,15 @@ export type CollectionBeforeDeleteHook = <
  * Runs immediately after the delete operation removes
  * records from the database. Returned values are discarded.
  */
-export type CollectionAfterDeleteHook<T extends Table = Table> = <
+export type CollectionAfterDeleteHook<
+  T extends Record<string, unknown> = Record<string, unknown>,
+> = <
   E extends Env = Env,
   P extends string = string,
   I extends Input = Input,
 >(props: {
   context: Context<E, P, I>;
-  doc: T["$inferInsert"];
+  doc: T;
 }) => Promisify<JSONValue | undefined>;
 
 export type CollectionAfterOperationHook = <

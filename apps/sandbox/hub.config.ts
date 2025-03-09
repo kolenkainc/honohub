@@ -4,8 +4,8 @@ import { type Env, Hono, type Schema } from "hono";
 import { logger } from "hono/logger";
 import {
   type GlobalPluginSetupProps,
-  defineCollection,
   defineHub,
+  drizzleCollection,
 } from "../../packages/core/src";
 import { useGraphQL } from "../../packages/graphql/src";
 import * as schema from "./src/db/schema";
@@ -13,7 +13,7 @@ import * as schema from "./src/db/schema";
 const neonSql = neon(process.env.DATABASE_URL ?? "");
 const db = drizzle(neonSql, { schema, logger: true });
 
-const collection = defineCollection({
+const collection = drizzleCollection({
   slug: "todos",
   schema: schema.todos,
   admin: {

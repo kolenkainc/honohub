@@ -77,9 +77,9 @@
     "acorn": "^8.12.1",
     "axios": "^1.7.7",
     "dayjs": "^1.11.13",
-    "drizzle-graphql": "^0.8.4",
-    "drizzle-orm": "^0.31.2",
-    "drizzle-zod": "^0.5.1",
+    "drizzle-graphql": "^0.8.5",
+    "drizzle-orm": "^0.40.0",
+    "drizzle-zod": "^0.7.0",
     "duck-form": "^0.1.4",
     "fast-glob": "^3.3.2",
     "flexsearch": "^0.7.43",
@@ -111,5 +111,6 @@
     "url-join": "^5.0.0",
     "zod": "^3.23.8",
     "zustand": "^4.5.4"
-  }
+  },
+  "packageManager": "pnpm@8.14.0+sha256.9cebf61abd83f68177b29484da72da9751390eaad46dfc3072d266bfbb1ba7bf"
 }

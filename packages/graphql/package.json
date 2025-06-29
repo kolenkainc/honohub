@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@hono/zod-validator": "^0.2.2",
-    "drizzle-graphql": "^0.8.4",
+    "drizzle-graphql": "^0.8.5",
     "graphql": "^16.9.0",
     "zod": "^3.23.8"
   },

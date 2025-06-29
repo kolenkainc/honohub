@@ -28,15 +28,15 @@
   },
   "dependencies": {
     "@hono/zod-validator": "^0.2.2",
-    "drizzle-zod": "^0.5.1",
+    "drizzle-zod": "^0.8.2",
     "zod": "^3.23.8"
   },
   "peerDependencies": {
-    "drizzle-orm": "^0.31.2",
+    "drizzle-orm": "^0.44.2",
     "hono": "^4.1.1"
   },
   "devDependencies": {
-    "drizzle-graphql": "^0.8.4"
+    "drizzle-graphql": "^0.8.5"
   },
   "types": "./index.cjs.d.ts"
 }

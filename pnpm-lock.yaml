@@ -74,15 +74,6 @@ importers:
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
-      drizzle-graphql:
-        specifier: 0.8.5
-        version: 0.8.5(drizzle-orm@0.44.2(@neondatabase/serverless@1.0.1)(@types/pg@8.11.6))(graphql@16.9.0)
-      drizzle-orm:
-        specifier: ^0.44.2
-        version: 0.44.2(@neondatabase/serverless@1.0.1)(@types/pg@8.11.6)
-      drizzle-zod:
-        specifier: ^0.8.2
-        version: 0.8.2(drizzle-orm@0.44.2(@neondatabase/serverless@1.0.1)(@types/pg@8.11.6))(zod@3.23.8)
       duck-form:
         specifier: ^0.1.4
         version: 0.1.4(react@18.3.1)
@@ -252,9 +243,18 @@ importers:
       czg:
         specifier: ^1.9.4
         version: 1.11.0
+      drizzle-graphql:
+        specifier: ^0.8.5
+        version: 0.8.5(drizzle-orm@0.44.2(@neondatabase/serverless@1.0.1)(@types/pg@8.11.6))(graphql@16.9.0)
       drizzle-kit:
         specifier: ^0.31.4
         version: 0.31.4
+      drizzle-orm:
+        specifier: ^0.44.2
+        version: 0.44.2(@neondatabase/serverless@1.0.1)(@types/pg@8.11.6)
+      drizzle-zod:
+        specifier: ^0.8.2
+        version: 0.8.2(drizzle-orm@0.44.2(@neondatabase/serverless@1.0.1)(@types/pg@8.11.6))(zod@3.23.8)
       husky:
         specifier: ^9.1.5
         version: 9.1.7

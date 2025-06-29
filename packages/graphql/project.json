@@ -1,5 +1,5 @@
 {
-  "name": "graphql",
+  "name": "framebassman-graphql",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/graphql/src",
   "projectType": "library",

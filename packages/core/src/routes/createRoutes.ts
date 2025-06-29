@@ -51,12 +51,14 @@ export function createRoutes<
   // Collection Document Count
   const collectionDocumentCount = db
     .select({ count: count() })
+    // @ts-expect-error
     .from(collection.schema)
     .prepare(`${collection.slug}_count_query`);
 
   // Collection Retrieve Query
   const collectionRetrieveQuery = db
     .select()
+    // @ts-expect-error
     .from(collection.schema)
     .where(eq(collection.queryKey, sql.placeholder("id")))
     .prepare(`${collection.slug}_retrieve_query`);
@@ -98,7 +100,9 @@ export function createRoutes<
 
     const query = c.req.valid("query");
 
+    // @ts-expect-error
     const records = db.select().from(collection.schema).$dynamic();
+    // @ts-expect-error
     const recordsCount = db.select({ count: count() }).from(collection.schema);
 
     if (query.search && collection.listSearchableFields.length > 0) {
@@ -331,7 +335,6 @@ export function createRoutes<
     // Updating the record
     const updatedDocQuery = db
       .update(collection.schema)
-      // @ts-expect-error
       .set(data)
       .where(eq(collection.queryKey, c.req.param("id")))
       .$dynamic();

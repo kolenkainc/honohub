@@ -1,7 +1,7 @@
 {
   "name": "honohub",
   "description": "The CMS for building apps and APIs with Hono",
-  "version": "0.2.3",
+  "version": "0.3.1",
   "license": "MIT",
   "keywords": [
     "hono",

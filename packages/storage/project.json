@@ -1,5 +1,5 @@
 {
-  "name": "framebassman-storage",
+  "name": "storage",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/storage/src",
   "projectType": "library",

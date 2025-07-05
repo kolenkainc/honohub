@@ -32,12 +32,15 @@ jobs:
         id: new-version
         run: echo "NEW_VERSION=${{ steps.bump-semver.outputs.new_version }}" >> $GITHUB_OUTPUT
       - uses: pnpm/action-setup@v4
-        working-directory: .
+        with:
+          working-directory: .
       - run: pnpm install
-        working-directory: .
+        with:
+          working-directory: .
       - run: jq '.version="${{ steps.bump-semver.outputs.new_version }}"' package.json > package.json.tmp && mv package.json.tmp package.json
       - run: pnpm nx build core
-        working-directory: .
+        with:
+          working-directory: .
       - uses: actions-ecosystem/action-push-tag@v1
         with:
           tag: ${{ steps.bump-semver.outputs.new_version }}

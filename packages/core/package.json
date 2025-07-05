@@ -1,5 +1,5 @@
 {
-  "name": "honohub",
+  "name": "@framebassman/honohub",
   "description": "The CMS for building apps and APIs with Hono",
   "version": "0.3.1",
   "license": "MIT",

@@ -12,6 +12,9 @@ jobs:
       id-token: write
       contents: write
       pull-requests: write
+    defaults:
+      run:
+        working-directory: ./packages/core
     outputs:
       NEW_VERSION: ${{ steps.new-version.outputs.NEW_VERSION }}
     steps:
@@ -38,13 +41,16 @@ jobs:
           tag_name: ${{ steps.bump-semver.outputs.new_version }}
           name: ${{ steps.bump-semver.outputs.new_version }}
 
-  publish-npm:
-    needs: build
+  publish:
+    needs: release
     runs-on: ubuntu-24.04
     permissions:
       id-token: write
       contents: write
       pull-requests: write
+    defaults:
+      run:
+        working-directory: ./packages/core
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3

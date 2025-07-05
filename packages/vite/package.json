@@ -1,5 +1,5 @@
 {
-  "name": "@honohub/vite",
+  "name": "@framebassman/@honohub/vite",
   "description": "Vite plugin for honohub",
   "version": "0.1.9",
   "license": "MIT",

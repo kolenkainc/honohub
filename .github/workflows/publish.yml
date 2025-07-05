@@ -31,14 +31,18 @@ jobs:
       - name: Set new version
         id: new-version
         run: echo "NEW_VERSION=${{ steps.bump-semver.outputs.new_version }}" >> $GITHUB_OUTPUT
+      - uses: pnpm/action-setup@v4
+        working-directory: .
       - run: pnpm install
+        working-directory: .
       - run: jq '.version="${{ steps.bump-semver.outputs.new_version }}"' package.json > package.json.tmp && mv package.json.tmp package.json
-      - run: npm run build
+      - run: pnpm nx build core
+        working-directory: .
       - uses: actions-ecosystem/action-push-tag@v1
         with:
           tag: ${{ steps.bump-semver.outputs.new_version }}
           message: '${{ steps.bump-semver.outputs.new_version }}'
-      - run: npm publish
+      - run: pnpm nx publish core
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
       - name: Create the GitHub release

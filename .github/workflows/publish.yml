@@ -39,17 +39,16 @@ jobs:
         with:
           working-directory: .
       - run: pnpm install
-        with:
-          working-directory: .
+        working-directory: .
       - run: jq '.version="${{ steps.bump-semver.outputs.new_version }}"' package.json > package.json.tmp && mv package.json.tmp package.json
       - run: pnpm nx build core
-        with:
-          working-directory: .
+        working-directory: .
       - uses: actions-ecosystem/action-push-tag@v1
         with:
           tag: ${{ steps.bump-semver.outputs.new_version }}
           message: '${{ steps.bump-semver.outputs.new_version }}'
       - run: pnpm nx publish core
+        working-directory: .
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
       - name: Create the GitHub release

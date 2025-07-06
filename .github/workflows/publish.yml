@@ -27,10 +27,13 @@ jobs:
           # releases-only: false  # This repository doesn't use GitHub's "release" feature.
           prefix: 'core@'  # Other kinds of tags are irrelevant; also limit to major version 7.
         id: get-latest-tag
+      - run: |
+          echo "LATEST_TAG=${${{ steps.bump-semver.outputs.get-latest-tag }}/core@/}" >> $GITHUB_OUTPUT
+        id: trimmed-latest-tag
       - uses: actions-ecosystem/action-bump-semver@v1
         id: bump-semver
         with:
-          current_version: ${{ steps.get-latest-tag.outputs.tag }}
+          current_version: ${{ steps.trimmed-latest-tag.outputs.LATEST_TAG }}
           level: patch
       - name: Set new version
         id: new-version

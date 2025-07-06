@@ -28,7 +28,7 @@ jobs:
           prefix: 'core@'  # Other kinds of tags are irrelevant; also limit to major version 7.
         id: get-latest-tag
       - run: |
-          firstString=${{ steps.bump-semver.outputs.get-latest-tag }}
+          firstString=${{ steps.get-latest-tag.outputs.tag }}
           secondString=""
           echo "${firstString/core@/"$secondString"}" > LATEST_TAG
           echo "$LATEST_TAG" >> $GITHUB_OUTPUT

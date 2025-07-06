@@ -21,7 +21,11 @@ jobs:
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org/
-      - uses: actions-ecosystem/action-get-latest-tag@v1
+      - uses: oprypin/find-latest-tag@v1.1.2
+        with:
+          repository: framebassman/honohub
+          # releases-only: false  # This repository doesn't use GitHub's "release" feature.
+          prefix: 'core@'  # Other kinds of tags are irrelevant; also limit to major version 7.
         id: get-latest-tag
       - uses: actions-ecosystem/action-bump-semver@v1
         id: bump-semver

@@ -1,5 +1,5 @@
 {
-  "name": "@honohub/react",
+  "name": "framebassman-honohub-react",
   "description": "React admin panel for honohub",
   "version": "0.1.2",
   "license": "MIT",
@@ -31,7 +31,7 @@
     "@rafty/ui": "^1.7.0",
     "@rafty/corp": "^1.0.1",
     "@heroicons/react": "^2.1.5",
-    "@honohub/shared": "0.1.0",
+    "framebassman-honohub-shared": "0.1.0",
     "fuse.js": "^7.0.0",
     "@duck-form/fields": "^0.1.0",
     "duck-form": "^0.1.4",
@@ -46,7 +46,7 @@
   },
   "peerDependencies": {
     "react": "^18.3.1",
-    "honohub": "^0.2.2"
+    "framebassman-honohub": "^0.2.2"
   },
   "devDependencies": {
     "hono": "^4.5.0"

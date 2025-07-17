@@ -6,7 +6,7 @@ on:
 name: release-please
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-24.04
     outputs:
       BUILD_BUILDNUMBER: ${{ steps.new-version.outputs.BUILD_BUILDNUMBER }}
@@ -45,6 +45,12 @@ jobs:
       - name: Build artifact
         run: |
           pnpm nx build core
+      - name: Release
+        run: |
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+        working-directory: ./dist/packages/core
 
   # release:
   #   needs: [build]

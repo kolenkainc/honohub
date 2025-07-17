@@ -30,8 +30,7 @@ jobs:
         with:
           tag: ${{ steps.bump-semver.outputs.new_version }}
           message: "${{ steps.bump-semver.outputs.new_version }}"
-      - name: Install dependencies
-        uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v4
         with:
           version: 10.12.1
           run_install: false
@@ -40,6 +39,7 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
+      - name: Install dependencies
         run: |
           pnpm install
       - name: Build artifact

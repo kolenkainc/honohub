@@ -47,7 +47,7 @@ jobs:
           pnpm nx build core
       - name: Release
         run: |
-          npm publish
+          npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
         working-directory: ./dist/packages/core

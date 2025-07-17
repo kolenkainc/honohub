@@ -1,9 +1,10 @@
 import { zValidator } from "@hono/zod-validator";
 import { type AnyDrizzleDB, buildSchema } from "drizzle-graphql";
 import { graphql } from "graphql";
-import type { GlobalPlugin } from "honohub";
+import type { GlobalPlugin } from "framebassman-honohub";
 import { z } from "zod";
 import type { GraphQLEditorProps } from "./playground";
+import { Context } from "hono";
 
 export const graphQLBodyValidation = z.object({
   operationName: z.string().optional(),
@@ -28,22 +29,26 @@ const defaultPlaygroundOptions = {
 
 export function useGraphQL<Database extends AnyDrizzleDB<any>>(
   options: GraphQLPluginConfig = {},
+// @ts-ignore
 ): GlobalPlugin<Database> {
   const { route = "/graphql" } = options;
 
   return {
     name: "honohub-graphql",
-    bootstrap(props) {
+    bootstrap(props: any) {
       const { schema } = buildSchema(props.config.db);
 
       props.app.post(
         route,
+        // @ts-ignore
         zValidator("json", graphQLBodyValidation),
-        async (c) => {
+        async (c: Context) => {
+          // @ts-ignore
           const data = c.req.valid("json");
 
           const response = await graphql({
             schema: schema,
+            // @ts-ignore
             source: data.query,
           });
 
@@ -53,7 +58,7 @@ export function useGraphQL<Database extends AnyDrizzleDB<any>>(
 
       return props.app;
     },
-    register(config) {
+    register(config: any) {
       if (!options.playground) return undefined;
 
       const { route: playgroundRoute, graphQLEndpoint } = {
@@ -69,8 +74,8 @@ export function useGraphQL<Database extends AnyDrizzleDB<any>>(
             icon: "CodeBracketSquareIcon",
             label: "GraphQL Editor",
             path: playgroundRoute,
-            import: "@honohub/graphql/playground",
-            props(config): GraphQLEditorProps {
+            import: "framebassman-honohub-graphql/playground",
+            props(config: any): GraphQLEditorProps {
               return {
                 endpoint: graphQLEndpoint ?? `${config.serverUrl}/graphql`,
               };

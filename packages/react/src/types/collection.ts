@@ -1,4 +1,4 @@
-import type { CollectionAction, CollectionAdminProps } from "honohub";
+import type { CollectionAction, CollectionAdminProps } from "framebassman-honohub";
 
 type GetObject<T> = T extends string ? never : T;
 

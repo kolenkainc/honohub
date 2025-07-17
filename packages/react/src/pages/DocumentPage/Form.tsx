@@ -4,7 +4,7 @@ import {
   FormFooter,
   FormMode,
   SUBMIT_BUTTON_KEY,
-} from "@honohub/shared";
+} from "framebassman-honohub-shared";
 import { Skeleton, Toast } from "@rafty/ui";
 import { useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";

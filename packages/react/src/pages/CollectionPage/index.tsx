@@ -1,5 +1,5 @@
 import { ArrowPathIcon, CodeBracketIcon } from "@heroicons/react/24/outline";
-import { rowSelectionColumn } from "@honohub/shared";
+import { rowSelectionColumn } from "framebassman-honohub-shared";
 import type { ColumnType } from "@rafty/corp";
 import { Button, Toast, classNames, eventHandler, useBoolean } from "@rafty/ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

@@ -213,7 +213,6 @@ export function createRoutes<
         data,
       });
 
-      // @ts-expect-error
       if (res !== undefined) data = res;
     }
 
@@ -328,7 +327,6 @@ export function createRoutes<
         originalDoc: record,
       });
 
-      // @ts-expect-error
       if (res !== undefined) data = res;
     }
 

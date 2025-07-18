@@ -4,13 +4,11 @@ on:
       - "*"
       - "!main"
 
-name: release-please
+name: build
 
 jobs:
-  version:
+  build-packages:
     runs-on: ubuntu-24.04
-    outputs:
-      BUILD_BUILDNUMBER: ${{ steps.new-version.outputs.BUILD_BUILDNUMBER }}
     permissions:
       id-token: write
       contents: write

@@ -1,14 +1,17 @@
-<a href="https://honohub.dev"><img width="100%" src="https://github.com/rhinobase/honohub/blob/main/apps/docs/public/images/banner.png?raw=true" alt="HonoHub Open-source headless CMS on the Edge" /></a>
+<a href="https://honohub.dev">
+  <img
+    width="100%"
+    src="https://github.com/kolenkainc/honohub/blob/main/apps/docs/public/images/banner.png?raw=true"
+    alt="HonoHub Open-source headless CMS on the Edge" 
+  />
+</a>
 <br />
 
 <div align="center">
-
-[![npm version](https://img.shields.io/npm/v/honohub.svg)](https://npmjs.org/package/honohub "View this project on NPM")
-[![npm downloads](https://img.shields.io/npm/dm/honohub)](https://www.npmjs.com/package/honohub)
-[![license](https://img.shields.io/npm/l/honohub)](LICENSE)
-
-A CMS framework built on [Hono](https://hono.dev/), [Drizzle](https://orm.drizzle.team/), [Zod](https://zod.dev/), and [Vite](https://vitejs.dev/)
-
+  [![npm version](https://img.shields.io/npm/v/kolenkainc-honohub.svg)](https://npmjs.org/package/kolenkainc-honohub "View this project on NPM")
+  [![npm downloads](https://img.shields.io/npm/dm/kolenkainc-honohub)](https://www.npmjs.com/package/kolenkainc-honohub)
+  [![license](https://img.shields.io/npm/l/kolenkainc-honohub)](LICENSE)
+  A CMS framework built on [Hono](https://hono.dev/), [Drizzle](https://orm.drizzle.team/), [Zod](https://zod.dev/), and [Vite](https://vitejs.dev/)
 </div>
 
 **HonoHub** is a simple and fast middleware for creating CMS for your websites or Apps.
@@ -20,7 +23,7 @@ A CMS framework built on [Hono](https://hono.dev/), [Drizzle](https://orm.drizzl
 
 ```sh
 # Using npm/yarn/pnpm/bun
-npm add honohub
+npm add kolenkainc-honohub
 ```
 
 [Go here for a step-by-step guide](https://honohub.dev/quickstart) on how to get up and running.
@@ -29,19 +32,19 @@ Check out the [docs](https://honohub.dev) and [plugins](https://honohub.dev/plug
 
 ## Plugins
 
-| Name                                                                 | Description                                                       |
-| -------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| [`@honohub/graphql`](https://www.npmjs.com/package/@honohub/graphql) | The `useGraphQL` plugin adds the GraphQL endpoint and playground. |
+| Name                                                                           | Description                                                       |
+| ------------------------------------------------------------------------------ | ----------------------------------------------------------------- |
+| [`@honohub/graphql`](https://www.npmjs.com/package/kolenkainc-honohub-graphql) | The `useGraphQL` plugin adds the GraphQL endpoint and playground. |
 
 ## Troubleshooting
 
-If the suggestions here don't work, please try posting questions on [GitHub Discussions](https://github.com/rhinobase/honohub/discussions) or in the #help channel of [Hono Discord](https://discord.gg/xUtamz2vxH).
+If the suggestions here don't work, please try posting questions on [GitHub Issues](https://github.com/kolenkainc/honohub/issues)
 
 ## Contributing
 
 We would love to have more contributors involved!
 
-To get started, please read our [Contributing Guide](https://github.com/rhinobase/honohub/blob/main/CONTRIBUTING.md).
+To get started, please read our [Contributing Guide](https://github.com/kolenkainc/honohub/blob/main/CONTRIBUTING.md).
 
 ## Disclaimer
 

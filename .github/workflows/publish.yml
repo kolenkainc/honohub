@@ -92,7 +92,7 @@ jobs:
         working-directory: ./packages/shared
       - name: Build artifact
         run: |
-          pnpm nx build core
+          pnpm nx build shared
       - name: Release
         run: |
           npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
@@ -127,7 +127,7 @@ jobs:
         working-directory: ./packages/storage
       - name: Build artifact
         run: |
-          pnpm nx build core
+          pnpm nx build storage
       - name: Release
         run: |
           npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
@@ -162,7 +162,7 @@ jobs:
         working-directory: ./packages/react
       - name: Build artifact
         run: |
-          pnpm nx build core
+          pnpm nx build react
       - name: Release
         run: |
           npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
@@ -197,7 +197,7 @@ jobs:
         working-directory: ./packages/graphql
       - name: Build artifact
         run: |
-          pnpm nx build core
+          pnpm nx build graphql
       - name: Release
         run: |
           npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
@@ -232,7 +232,7 @@ jobs:
         working-directory: ./packages/vite
       - name: Build artifact
         run: |
-          pnpm nx build core
+          pnpm nx build vite
       - name: Release
         run: |
           npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN

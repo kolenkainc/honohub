@@ -47,6 +47,7 @@ jobs:
           pnpm nx build core
       - name: Release
         run: |
+          npm config set _auth $NODE_AUTH_TOKEN
           npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}

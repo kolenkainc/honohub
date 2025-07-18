@@ -1,5 +1,5 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { Pagination, Searchbar } from "framebassman-honohub-shared";
+import { Pagination, Searchbar } from "kolenkainc-honohub-shared";
 import { type ColumnType, DataTable as SharedDatatable } from "@rafty/corp";
 import { Button, Text } from "@rafty/ui";
 import { Blueprint, DuckForm } from "duck-form";

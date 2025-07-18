@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { type AnyDrizzleDB, buildSchema } from "drizzle-graphql";
 import { graphql } from "graphql";
-import type { GlobalPlugin } from "framebassman-honohub";
+import type { GlobalPlugin } from "kolenkainc-honohub";
 import { z } from "zod";
 import type { GraphQLEditorProps } from "./playground";
 import { Context } from "hono";
@@ -74,7 +74,7 @@ export function useGraphQL<Database extends AnyDrizzleDB<any>>(
             icon: "CodeBracketSquareIcon",
             label: "GraphQL Editor",
             path: playgroundRoute,
-            import: "framebassman-honohub-graphql/playground",
+            import: "kolenkainc-honohub-graphql/playground",
             props(config: any): GraphQLEditorProps {
               return {
                 endpoint: graphQLEndpoint ?? `${config.serverUrl}/graphql`,

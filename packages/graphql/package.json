@@ -1,5 +1,5 @@
 {
-  "name": "framebassman-honohub-graphql",
+  "name": "kolenkainc-honohub-graphql",
   "description": "GraphQL middleware for honohub",
   "version": "0.0.0",
   "license": "MIT",
@@ -20,11 +20,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/framebassman/honohub.git",
+    "url": "git+https://github.com/kolenkainc/honohub.git",
     "directory": "packages/core"
   },
   "bugs": {
-    "url": "https://github.com/framebassman/honohub/issues"
+    "url": "https://github.com/kolenkainc/honohub/issues"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.2.2",
@@ -36,7 +36,7 @@
     "graphiql": "^3.3.2",
     "@graphiql/toolkit": "^0.9.1",
     "hono": "^4.1.1",
-    "framebassman-honohub": "workspace:0.0.0"
+    "kolenkainc-honohub": "workspace:0.0.0"
   },
   "exports": {
     ".": {

@@ -1,4 +1,4 @@
-import { Searchbar } from "framebassman-honohub-shared";
+import { Searchbar } from "kolenkainc-honohub-shared";
 import { Spinner, useLastElement } from "@rafty/ui";
 import { useField } from "duck-form";
 import { useState } from "react";

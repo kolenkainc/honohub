@@ -1,5 +1,5 @@
 import { CodeBracketIcon } from "@heroicons/react/24/outline";
-import { FormMode } from "framebassman-honohub-shared";
+import { FormMode } from "kolenkainc-honohub-shared";
 import { Button, eventHandler, useBoolean } from "@rafty/ui";
 import { useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";

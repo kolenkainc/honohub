@@ -1,4 +1,4 @@
-import { FormMode } from "framebassman-honohub-shared";
+import { FormMode } from "kolenkainc-honohub-shared";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { useServer } from "../../providers";

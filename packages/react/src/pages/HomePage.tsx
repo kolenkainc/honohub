@@ -151,7 +151,7 @@ const SOCIALS = [
   {
     icon: BugAntIcon,
     label: "Bug Reports",
-    href: "https://github.com/framebassman/honohub/issues",
+    href: "https://github.com/kolenkainc/honohub/issues",
     isExternal: true,
   },
   {

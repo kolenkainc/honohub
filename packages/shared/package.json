@@ -1,5 +1,5 @@
 {
-  "name": "framebassman-honohub-shared",
+  "name": "kolenkainc-honohub-shared",
   "description": "HonoHub shared components",
   "version": "0.0.0",
   "license": "MIT",
@@ -10,11 +10,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/framebassman/honohub.git",
+    "url": "git+https://github.com/kolenkainc/honohub.git",
     "directory": "packages/core"
   },
   "bugs": {
-    "url": "https://github.com/framebassman/honohub/issues"
+    "url": "https://github.com/kolenkainc/honohub/issues"
   },
   "dependencies": {
     "@duck-form/fields": "0.1.0",

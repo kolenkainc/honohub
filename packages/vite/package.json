@@ -19,19 +19,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/framebassman/honohub.git",
+    "url": "git+https://github.com/kolenkainc/honohub.git",
     "directory": "packages/core"
   },
   "bugs": {
-    "url": "https://github.com/framebassman/honohub/issues"
+    "url": "https://github.com/kolenkainc/honohub/issues"
   },
   "peerDependencies": {
     "drizzle-orm": "^0.44.2"
   },
   "devDependencies": {
-    "framebassman-honohub-react": "workspace:0.0.0",
+    "kolenkainc-honohub-react": "workspace:0.0.0",
     "drizzle-graphql": "^0.8.5",
-    "framebassman-honohub": "workspace:0.0.0",
+    "kolenkainc-honohub": "workspace:0.0.0",
     "vite": "^5.3.3"
   },
   "types": "./index.cjs.d.ts"

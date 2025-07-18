@@ -1,6 +1,6 @@
 import { mkdir } from "node:fs/promises";
 import type { AnyDrizzleDB } from "drizzle-graphql";
-import type { SanitizedHub } from "framebassman-honohub";
+import type { SanitizedHub } from "kolenkainc-honohub";
 import type { PluginOption } from "vite";
 import {
   type BuildOptions,

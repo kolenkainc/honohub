@@ -1,5 +1,5 @@
 {
-  "name": "framebassman-honohub-react",
+  "name": "kolenkainc-honohub-react",
   "description": "React admin panel for honohub",
   "version": "0.0.0",
   "license": "MIT",
@@ -19,11 +19,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/framebassman/honohub.git",
+    "url": "git+https://github.com/kolenkainc/honohub.git",
     "directory": "packages/core"
   },
   "bugs": {
-    "url": "https://github.com/framebassman/honohub/issues"
+    "url": "https://github.com/kolenkainc/honohub/issues"
   },
   "dependencies": {
     "axios": "^1.7.2",
@@ -31,7 +31,7 @@
     "@rafty/ui": "^1.7.0",
     "@rafty/corp": "^1.0.1",
     "@heroicons/react": "^2.1.5",
-    "framebassman-honohub-shared": "workspace:0.0.0",
+    "kolenkainc-honohub-shared": "workspace:0.0.0",
     "fuse.js": "^7.0.0",
     "@duck-form/fields": "^0.1.0",
     "duck-form": "^0.1.4",
@@ -46,7 +46,7 @@
   },
   "peerDependencies": {
     "react": "^18.3.1",
-    "framebassman-honohub": "workspace:0.0.0"
+    "kolenkainc-honohub": "workspace:0.0.0"
   },
   "devDependencies": {
     "hono": "^4.5.0"

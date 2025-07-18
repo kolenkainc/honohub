@@ -1,5 +1,5 @@
 {
-  "name": "framebassman-honohub-storage",
+  "name": "kolenkainc-honohub-storage",
   "description": "HonoHub storage components",
   "version": "0.0.0",
   "license": "MIT",
@@ -10,16 +10,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/framebassman/honohub.git",
+    "url": "git+https://github.com/kolenkainc/honohub.git",
     "directory": "packages/core"
   },
   "bugs": {
-    "url": "https://github.com/framebassman/honohub/issues"
+    "url": "https://github.com/kolenkainc/honohub/issues"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.5",
     "@hookform/resolvers": "^3.9.0",
-    "framebassman-honohub-shared": "workspace:0.0.0",
+    "kolenkainc-honohub-shared": "workspace:0.0.0",
     "@rafty/ui": "^1.7.6",
     "@tanstack/react-query": "^5.56.2",
     "@uidotdev/usehooks": "^2.4.1",

@@ -25,7 +25,7 @@ jobs:
           level: patch
       - name: Set new version
         id: new-version
-        run: echo "NEW_VERSION=${{ steps.bump-semver.outputs.new_version }}" >> $GITHUB_OUTPUT
+        run: echo "BUILD_BUILDNUMBER=${{ steps.bump-semver.outputs.new_version }}" >> $GITHUB_OUTPUT
       - uses: actions-ecosystem/action-push-tag@v1
         with:
           tag: ${{ steps.bump-semver.outputs.new_version }}
@@ -53,7 +53,7 @@ jobs:
         run: |
           pnpm install
       - run: |
-          jq '.version="${{ needs.version.outputs.NEW_VERSION }}"' package.json > package.json.tmp && mv package.json.tmp package.json
+          jq '.version="${{ needs.version.outputs.BUILD_BUILDNUMBER }}"' package.json > package.json.tmp && mv package.json.tmp package.json
         working-directory: ./packages/core
       - name: Build artifact
         run: |

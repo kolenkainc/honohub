@@ -31,7 +31,7 @@
     "@rafty/ui": "^1.7.0",
     "@rafty/corp": "^1.0.1",
     "@heroicons/react": "^2.1.5",
-    "framebassman-honohub-shared": "0.0.0",
+    "framebassman-honohub-shared": "workspace:0.0.0",
     "fuse.js": "^7.0.0",
     "@duck-form/fields": "^0.1.0",
     "duck-form": "^0.1.4",
@@ -46,7 +46,7 @@
   },
   "peerDependencies": {
     "react": "^18.3.1",
-    "framebassman-honohub": "^0.2.2"
+    "framebassman-honohub": "workspace:0.0.0"
   },
   "devDependencies": {
     "hono": "^4.5.0"

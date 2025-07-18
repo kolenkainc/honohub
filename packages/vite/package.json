@@ -29,9 +29,9 @@
     "drizzle-orm": "^0.44.2"
   },
   "devDependencies": {
-    "framebassman-honohub-react": "0.0.0",
+    "framebassman-honohub-react": "workspace:0.0.0",
     "drizzle-graphql": "^0.8.5",
-    "framebassman-honohub": "0.0.0",
+    "framebassman-honohub": "workspace:0.0.0",
     "vite": "^5.3.3"
   },
   "types": "./index.cjs.d.ts"

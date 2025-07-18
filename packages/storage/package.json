@@ -19,7 +19,7 @@
   "dependencies": {
     "@heroicons/react": "^2.1.5",
     "@hookform/resolvers": "^3.9.0",
-    "framebassman-honohub-shared": "0.0.0",
+    "framebassman-honohub-shared": "workspace:0.0.0",
     "@rafty/ui": "^1.7.6",
     "@tanstack/react-query": "^5.56.2",
     "@uidotdev/usehooks": "^2.4.1",

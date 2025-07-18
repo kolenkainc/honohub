@@ -6,7 +6,7 @@ on:
 name: release-please
 
 jobs:
-  release:
+  version:
     runs-on: ubuntu-24.04
     outputs:
       BUILD_BUILDNUMBER: ${{ steps.new-version.outputs.BUILD_BUILDNUMBER }}
@@ -25,11 +25,21 @@ jobs:
           level: patch
       - name: Set new version
         id: new-version
-        run: echo "BUILD_BUILDNUMBER=${{ steps.bump-semver.outputs.new_version }}" >> $GITHUB_OUTPUT
+        run: echo "NEW_VERSION=${{ steps.bump-semver.outputs.new_version }}" >> $GITHUB_OUTPUT
       - uses: actions-ecosystem/action-push-tag@v1
         with:
           tag: ${{ steps.bump-semver.outputs.new_version }}
           message: "${{ steps.bump-semver.outputs.new_version }}"
+
+  release-core:
+    needs: [version]
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with:
           version: 10.12.1
@@ -43,7 +53,7 @@ jobs:
         run: |
           pnpm install
       - run: |
-          jq '.version="${{ steps.bump-semver.outputs.new_version }}"' package.json > package.json.tmp && mv package.json.tmp package.json
+          jq '.version="${{ needs.version.outputs.NEW_VERSION }}"' package.json > package.json.tmp && mv package.json.tmp package.json
         working-directory: ./packages/core
       - name: Build artifact
         run: |
@@ -55,31 +65,3 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
         working-directory: ./dist/packages/core
-
-  # release:
-  #   needs: [build]
-  #   runs-on: ubuntu-24.04
-  #   permissions:
-  #     id-token: write
-  #     contents: write
-  #     pull-requests: write
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Create the GitHub release
-  #       uses: softprops/action-gh-release@v1
-  #       with:
-  #         token: ${{ secrets.GITHUB_TOKEN }}
-  #         prerelease: false
-  #         tag_name: ${{ needs.build.outputs.BUILD_BUILDNUMBER }}
-  #         name: ${{ needs.build.outputs.BUILD_BUILDNUMBER }}
-  #     - name: Create the Sentry release
-  #       uses: getsentry/action-release@v3.1.0
-  #       env:
-  #         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-  #         SENTRY_ORG: kolenka-inc
-  #         SENTRY_PROJECT: romashov-tech
-  #       with:
-  #         environment: Production
-  #         ignore_missing: true
-  #         sourcemaps: ./services/web/dist/romashov_tech_web/index.js.map
-  #         release: ${{ needs.build.outputs.BUILD_BUILDNUMBER }}

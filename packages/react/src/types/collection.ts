@@ -1,4 +1,4 @@
-import type { CollectionAction, CollectionAdminProps } from "honohub";
+import type { CollectionAction, CollectionAdminProps } from "kolenkainc-honohub";
 
 type GetObject<T> = T extends string ? never : T;
 

@@ -35,13 +35,13 @@ export function createRoutes<
   let collectionInsertSchema = createInsertSchema(collection.schema);
 
   if (collection.admin.fields)
-    // @ts-expect-error
+    // @ts-ignore it should be here
     collectionInsertSchema = collectionInsertSchema.pick(
       collection.admin.fields.reduce((acc, field) => {
         let key = field;
         if (typeof field === "object" && "name" in field) key = field.name;
 
-        // @ts-expect-error
+        // @ts-ignore it should be here
         acc[key] = true;
         return acc;
       }, {}),
@@ -51,12 +51,14 @@ export function createRoutes<
   // Collection Document Count
   const collectionDocumentCount = db
     .select({ count: count() })
+    // @ts-ignore it should be here
     .from(collection.schema)
     .prepare(`${collection.slug}_count_query`);
 
   // Collection Retrieve Query
   const collectionRetrieveQuery = db
     .select()
+    // @ts-ignore it should be here
     .from(collection.schema)
     .where(eq(collection.queryKey, sql.placeholder("id")))
     .prepare(`${collection.slug}_retrieve_query`);
@@ -68,7 +70,7 @@ export function createRoutes<
     .$dynamic();
 
   if ("$returningId" in collectionDeleteQuery) {
-    // @ts-expect-error
+    // @ts-ignore it should be here
     collectionDeleteQuery.$returningId?.();
   } else {
     collectionDeleteQuery.returning();
@@ -98,14 +100,16 @@ export function createRoutes<
 
     const query = c.req.valid("query");
 
+    // @ts-ignore it should be here
     const records = db.select().from(collection.schema).$dynamic();
+    // @ts-ignore it should be here
     const recordsCount = db.select({ count: count() }).from(collection.schema);
 
     if (query.search && collection.listSearchableFields.length > 0) {
       records.where(
         or(
           ...collection.listSearchableFields.map((field) =>
-            // @ts-expect-error
+            // @ts-ignore it should be here
             ilike(collection.schema[field], `%${query.search}%`),
           ),
         ),
@@ -125,7 +129,7 @@ export function createRoutes<
     }
 
     if (sortBy && sortByInString in collection.schema) {
-      // @ts-expect-error
+      // @ts-ignore it should be here
       records.orderBy(order(collection.schema[sortByInString]));
     }
 
@@ -209,7 +213,7 @@ export function createRoutes<
         data,
       });
 
-      // @ts-expect-error
+      // @ts-ignore it should be here
       if (res !== undefined) data = res;
     }
 
@@ -324,14 +328,13 @@ export function createRoutes<
         originalDoc: record,
       });
 
-      // @ts-expect-error
+      // @ts-ignore it should be here
       if (res !== undefined) data = res;
     }
 
     // Updating the record
     const updatedDocQuery = db
       .update(collection.schema)
-      // @ts-expect-error
       .set(data)
       .where(eq(collection.queryKey, c.req.param("id")))
       .$dynamic();

@@ -1,10 +1,10 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import type { HonoHub } from "@honohub/react";
+import type { HonoHub } from "kolenkainc-honohub-react";
 import type { AnyDrizzleDB } from "drizzle-graphql";
 import { getTableColumns, getTableName } from "drizzle-orm";
-import type { SanitizedHub, ValueOf } from "honohub";
+import type { SanitizedHub, ValueOf } from "kolenkainc-honohub";
 
 export type TemplateGeneratorProps<Database extends AnyDrizzleDB<any>> = {
   basePath: string;

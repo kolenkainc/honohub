@@ -1,7 +1,7 @@
 {
-  "name": "@honohub/graphql",
+  "name": "kolenkainc-honohub-graphql",
   "description": "GraphQL middleware for honohub",
-  "version": "0.2.4",
+  "version": "0.0.0",
   "license": "MIT",
   "keywords": [
     "hono",
@@ -20,15 +20,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rhinobase/honohub.git",
+    "url": "git+https://github.com/kolenkainc/honohub.git",
     "directory": "packages/core"
   },
   "bugs": {
-    "url": "https://github.com/rhinobase/honohub/issues"
+    "url": "https://github.com/kolenkainc/honohub/issues"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.2.2",
-    "drizzle-graphql": "^0.8.4",
+    "drizzle-graphql": "^0.8.5",
     "graphql": "^16.9.0",
     "zod": "^3.23.8"
   },
@@ -36,7 +36,7 @@
     "graphiql": "^3.3.2",
     "@graphiql/toolkit": "^0.9.1",
     "hono": "^4.1.1",
-    "honohub": "^0.1.0"
+    "kolenkainc-honohub": "workspace:0.0.0"
   },
   "exports": {
     ".": {

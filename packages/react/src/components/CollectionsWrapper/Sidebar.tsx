@@ -3,7 +3,7 @@ import {
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { highlightMatches } from "@honohub/shared";
+import { highlightMatches } from "kolenkainc-honohub-shared";
 import {
   Button,
   Drawer,

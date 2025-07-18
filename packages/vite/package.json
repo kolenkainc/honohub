@@ -1,7 +1,7 @@
 {
-  "name": "@honohub/vite",
+  "name": "kolenkainc-honohub-vite",
   "description": "Vite plugin for honohub",
-  "version": "0.1.9",
+  "version": "0.0.0",
   "license": "MIT",
   "keywords": [
     "hono",
@@ -19,19 +19,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rhinobase/honohub.git",
+    "url": "git+https://github.com/kolenkainc/honohub.git",
     "directory": "packages/core"
   },
   "bugs": {
-    "url": "https://github.com/rhinobase/honohub/issues"
+    "url": "https://github.com/kolenkainc/honohub/issues"
   },
   "peerDependencies": {
-    "drizzle-orm": "^0.32.0"
+    "drizzle-orm": "^0.44.2"
   },
   "devDependencies": {
-    "@honohub/react": "^0.1.0",
-    "drizzle-graphql": "^0.8.4",
-    "honohub": "^0.1.2",
+    "kolenkainc-honohub-react": "workspace:0.0.0",
+    "drizzle-graphql": "^0.8.5",
+    "kolenkainc-honohub": "workspace:0.0.0",
     "vite": "^5.3.3"
   },
   "types": "./index.cjs.d.ts"

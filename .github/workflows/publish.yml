@@ -1,0 +1,242 @@
+on:
+  push:
+    branches:
+      - main
+
+name: release-please
+
+jobs:
+  version:
+    runs-on: ubuntu-24.04
+    outputs:
+      BUILD_BUILDNUMBER: ${{ steps.new-version.outputs.BUILD_BUILDNUMBER }}
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-ecosystem/action-get-latest-tag@v1
+        id: get-latest-tag
+      - uses: actions-ecosystem/action-bump-semver@v1
+        id: bump-semver
+        with:
+          current_version: ${{ steps.get-latest-tag.outputs.tag }}
+          level: patch
+      - name: Set new version
+        id: new-version
+        run: echo "BUILD_BUILDNUMBER=${{ steps.bump-semver.outputs.new_version }}" >> $GITHUB_OUTPUT
+      - uses: actions-ecosystem/action-push-tag@v1
+        with:
+          tag: ${{ steps.bump-semver.outputs.new_version }}
+          message: "${{ steps.bump-semver.outputs.new_version }}"
+
+  release-core:
+    needs: [version]
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.12.1
+          run_install: false
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: |
+          pnpm install
+      - run: |
+          jq '.version="${{ needs.version.outputs.BUILD_BUILDNUMBER }}"' package.json > package.json.tmp && mv package.json.tmp package.json
+        working-directory: ./packages/core
+      - name: Build artifact
+        run: |
+          pnpm nx build core
+      - name: Release
+        run: |
+          npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
+          npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+        working-directory: ./dist/packages/core
+
+  release-shared:
+    needs: [version]
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.12.1
+          run_install: false
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: |
+          pnpm install
+      - run: |
+          jq '.version="${{ needs.version.outputs.BUILD_BUILDNUMBER }}"' package.json > package.json.tmp && mv package.json.tmp package.json
+        working-directory: ./packages/shared
+      - name: Build artifact
+        run: |
+          pnpm nx build shared
+      - name: Release
+        run: |
+          npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
+          npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+        working-directory: ./dist/packages/shared
+
+  release-storage:
+    needs: [version]
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.12.1
+          run_install: false
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: |
+          pnpm install
+      - run: |
+          jq '.version="${{ needs.version.outputs.BUILD_BUILDNUMBER }}"' package.json > package.json.tmp && mv package.json.tmp package.json
+        working-directory: ./packages/storage
+      - name: Build artifact
+        run: |
+          pnpm nx build storage
+      - name: Release
+        run: |
+          npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
+          npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+        working-directory: ./dist/packages/storage
+
+  release-react:
+    needs: [version]
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.12.1
+          run_install: false
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: |
+          pnpm install
+      - run: |
+          jq '.version="${{ needs.version.outputs.BUILD_BUILDNUMBER }}"' package.json > package.json.tmp && mv package.json.tmp package.json
+        working-directory: ./packages/react
+      - name: Build artifact
+        run: |
+          pnpm nx build react
+      - name: Release
+        run: |
+          npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
+          npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+        working-directory: ./dist/packages/react
+
+  release-graphql:
+    needs: [version]
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.12.1
+          run_install: false
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: |
+          pnpm install
+      - run: |
+          jq '.version="${{ needs.version.outputs.BUILD_BUILDNUMBER }}"' package.json > package.json.tmp && mv package.json.tmp package.json
+        working-directory: ./packages/graphql
+      - name: Build artifact
+        run: |
+          pnpm nx build graphql
+      - name: Release
+        run: |
+          npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
+          npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+        working-directory: ./dist/packages/graphql
+
+  release-vite:
+    needs: [version]
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.12.1
+          run_install: false
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: |
+          pnpm install
+      - run: |
+          jq '.version="${{ needs.version.outputs.BUILD_BUILDNUMBER }}"' package.json > package.json.tmp && mv package.json.tmp package.json
+        working-directory: ./packages/vite
+      - name: Build artifact
+        run: |
+          pnpm nx build vite
+      - name: Release
+        run: |
+          npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
+          npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+        working-directory: ./dist/packages/vite

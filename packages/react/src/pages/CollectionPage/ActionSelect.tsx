@@ -1,5 +1,5 @@
 import BoltIcon from "@heroicons/react/24/outline/BoltIcon";
-import { ActionSelect as SharedActionSelect } from "@honohub/shared";
+import { ActionSelect as SharedActionSelect } from "kolenkainc-honohub-shared";
 import { Toast } from "@rafty/ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";

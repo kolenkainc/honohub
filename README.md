@@ -1,9 +1,5 @@
 <a href="https://honohub.dev">
-  <img
-    width="100%"
-    src="https://github.com/kolenkainc/honohub/blob/main/apps/docs/public/images/banner.png?raw=true"
-    alt="HonoHub Open-source headless CMS on the Edge" 
-  />
+<img width="100%" src="https://github.com/kolenkainc/honohub/blob/main/apps/docs/public/images/banner.png?raw=true" alt="HonoHub Open-source headless CMS on the Edge" />
 </a>
 <br />
 

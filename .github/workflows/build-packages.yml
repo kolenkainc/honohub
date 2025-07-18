@@ -7,7 +7,7 @@ on:
 name: build
 
 jobs:
-  version:
+  build-packages:
     runs-on: ubuntu-24.04
     permissions:
       id-token: write

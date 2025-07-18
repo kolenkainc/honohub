@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - bump/packages
+      - main
 
 name: release-please
 
